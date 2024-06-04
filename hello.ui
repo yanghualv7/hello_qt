@@ -6,40 +6,76 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>863</width>
-    <height>541</height>
+    <width>1105</width>
+    <height>931</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>金科院</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
      <rect>
-      <x>126</x>
-      <y>56</y>
-      <width>501</width>
-      <height>291</height>
+      <x>160</x>
+      <y>260</y>
+      <width>541</width>
+      <height>231</height>
      </rect>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>863</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>前赤壁赋</string>
+   <widget class="QLabel" name="imageLabel">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>530</y>
+      <width>341</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
     </property>
    </widget>
-   <addaction name="menu"/>
+   <widget class="QLabel" name="macLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>20</y>
+      <width>451</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="macLabel_2">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>20</y>
+      <width>451</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="statusLabel">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>130</y>
+      <width>451</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
