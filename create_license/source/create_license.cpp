@@ -5,19 +5,52 @@
 #include <QDir>
 #include <QDateTime>
 
-QString encryptLicense(const QString& user, const QString& macAddress)
-{
-	// 提取 macAddress 中的数字部分
-	QString numericMacAddress;
-	for (QChar c : macAddress)
-	{
-		if (c.isDigit())
-			numericMacAddress += c;
-	}
+//Copyright 2022 Yang Y., All rights reserved.
+//快速幂模运算代码参考https://blog.csdn.net/Pumpkin_Tung/article/details/121443351
+#include<conio.h>
+#include<string>
+#include "AES.h"
+//懒得写密钥扩展了
+//这个AES密钥是256个Base64字符组成的的字符串,经过转换变成192个八位二进制数直接作为密钥组,加密总共加密12轮甚至11轮罢。
+//密钥用summonAESKey.py生成
+std::string key = "1145141919810Shimokita5ZUgHJOK0BHEv6,AH3S,RrkQU58zxG,BLf/sguM9fAocN7xwUfb,v8L8eaTGpYzdy7HTiKqPXj6D6,7ej3NfqoL29Av7ZOWPj5l1HqiVNG60i+g1GF,J+qr3sa+32MZuuiZynOyJwFGP,bFEKFDDGSmb0QrRL3Pl8M3ay68o0inrPBYiz+Btm9fhWt1cQ9TZxTWQ0QQBsMqAIV9mB2Udx1DEaGfZPFpR8c148QnN0T";//AES密钥,256位
 
-	QString license = user + ":" + numericMacAddress;
-	QByteArray encrypted = license.toUtf8().toBase64();
-	return QString(encrypted);
+
+
+QString extractHexDigits(const QString& input)
+{
+	QString result;
+	QRegularExpression hexDigitRegex("[0-9A-Fa-f]");
+	QRegularExpressionMatchIterator i = hexDigitRegex.globalMatch(input);
+	while (i.hasNext()) {
+		QRegularExpressionMatch match = i.next();
+		result += match.captured(0);
+	}
+	return result;
+}
+
+// 加密/解密函数
+string encryptLicense(const QString times, const QString& user, const QString& macAddress)
+{
+	QString numericMacAddress = extractHexDigits(macAddress);
+
+	QString plaintext = times + "|" + numericMacAddress;
+	//QString plaintext = numericMacAddress;
+
+	init();
+
+init:
+	cout << "选择工作模式:加密(1)解密(2)退出(0)" << endl;
+
+	string inp = plaintext.toStdString();
+	//密文
+	string opt = aes(key, 1, inp);
+	//明文
+	string ss = aes(key, 2, opt);
+	cout << "\n明文：" << ss.c_str();
+
+	return opt;
+
 }
 
 // 构造函数和析构函数
@@ -53,6 +86,8 @@ void create_license::generateLicenseFile()
 		{
 			QString user = userItem->text();
 			QString macAddress = macItem->text();
+			QDate endDate = ui.end_Time->date();
+			QString endDateString = endDate.toString("yyyyMMdd");
 
 			// 检查输入是否为空
 			if (user.isEmpty() || macAddress.isEmpty())
@@ -61,8 +96,7 @@ void create_license::generateLicenseFile()
 				continue;
 			}
 
-			// 生成加密后的license
-			QString encryptedLicense = encryptLicense(user, macAddress);
+			string Licence = encryptLicense(endDateString, user, macAddress);
 
 			// 创建文件名，使用用户名称作为文件名的一部分
 			QString fileName = "License/" + user + ".lic";
@@ -70,7 +104,9 @@ void create_license::generateLicenseFile()
 			if (file.open(QIODevice::WriteOnly | QIODevice::Text))
 			{
 				QTextStream out(&file);
-				out << encryptedLicense;
+				//将string 转回 QString
+				QString qLicence = QString::fromStdString(Licence);
+				out << qLicence;
 				file.close();
 			}
 			else

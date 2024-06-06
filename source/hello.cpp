@@ -7,21 +7,47 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QSettings>
+#include <QDateTime>
+#include <AES.h>
 
-// 加密许可证的函数
-QString encryptLicense(const QString& user, const QString& macAddress)
+//Copyright 2022 Yang Y., All rights reserved.
+//快速幂模运算代码参考https://blog.csdn.net/Pumpkin_Tung/article/details/121443351
+#include<conio.h>
+#include<string>
+#include "AES.h"
+//懒得写密钥扩展了
+//这个AES密钥是256个Base64字符组成的的字符串,经过转换变成192个八位二进制数直接作为密钥组,加密总共加密12轮甚至11轮罢。
+//密钥用summonAESKey.py生成
+std::string key = "1145141919810Shimokita5ZUgHJOK0BHEv6,AH3S,RrkQU58zxG,BLf/sguM9fAocN7xwUfb,v8L8eaTGpYzdy7HTiKqPXj6D6,7ej3NfqoL29Av7ZOWPj5l1HqiVNG60i+g1GF,J+qr3sa+32MZuuiZynOyJwFGP,bFEKFDDGSmb0QrRL3Pl8M3ay68o0inrPBYiz+Btm9fhWt1cQ9TZxTWQ0QQBsMqAIV9mB2Udx1DEaGfZPFpR8c148QnN0T";//AES密钥,256位
+
+QString extractHexDigits(const QString& input)
 {
-	// 提取 macAddress 中的数字部分
-	QString numericMacAddress;
-	for (QChar c : macAddress)
-	{
-		if (c.isDigit())
-			numericMacAddress += c;
+	QString result;
+	QRegularExpression hexDigitRegex("[0-9A-Fa-f]");
+	QRegularExpressionMatchIterator i = hexDigitRegex.globalMatch(input);
+	while (i.hasNext()) {
+		QRegularExpressionMatch match = i.next();
+		result += match.captured(0);
 	}
+	return result;
+}
 
-	QString license = user + ":" + numericMacAddress;
-	QByteArray encrypted = license.toUtf8().toBase64();
-	return QString(encrypted);
+// 解密函数
+string encryptLicense(const QString& storedEncryptedLicense)
+{
+	init();
+
+init:
+	//选择工作模式:加密(1)解密(2)
+
+	string opt = storedEncryptedLicense.toStdString();
+	////密文
+	//string opt = aes(key, 1, inp);
+	//明文
+	string ss = aes(key, 2, opt);
+
+	return ss;
+
 }
 
 // 获取MAC地址的函数
@@ -67,7 +93,7 @@ QString readLicenseFile(const QString& licensePath)
 		return QString();
 }
 
-hello::hello(const QString& user, QWidget* parent)
+hello::hello(const QString& storedEncryptedLicense, const QString& user, QWidget* parent)
 	: QMainWindow(parent),
 	ui(new Ui::helloClass)
 {
@@ -78,8 +104,11 @@ hello::hello(const QString& user, QWidget* parent)
 	ui->macLabel->setText("MAC Address: " + macAddress);
 	ui->statusLabel->setText(u8"读取 license 成功!");
 
-	QString encryptedLicense = encryptLicense(user, macAddress);
-	ui->macLabel_2->setText("License: " + encryptedLicense);
+
+	string encryptedLicense_ = encryptLicense(storedEncryptedLicense);
+
+
+	ui->macLabel_2->setText("License: " + QString::fromStdString(encryptedLicense_));
 
 	// 读取ini文件
 	QString iniFilePath = "config/cfg.ini";

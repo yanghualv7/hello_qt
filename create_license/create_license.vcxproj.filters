@@ -43,4 +43,20 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\AES.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\summonAESKey.py">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="source\summonSBox.py">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
