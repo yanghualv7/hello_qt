@@ -13,7 +13,7 @@ class hello : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit hello(const QString& user, QWidget* parent = nullptr);
+	explicit hello(const QString& storedEncryptedLicense, const QString& user, QWidget* parent = nullptr);
 	~hello();
 
 private:

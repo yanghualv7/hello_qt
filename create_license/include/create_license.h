@@ -9,6 +9,8 @@ class create_license : public QMainWindow
 	Q_OBJECT
 
 public:
+	Ui::create_licenseClass ui;
+
 	create_license(QWidget* parent = nullptr);
 	void addRow();
 	~create_license();
@@ -16,8 +18,6 @@ public:
 private slots:
 	void generateLicenseFile();
 
-private:
-	Ui::create_licenseClass ui;
 };
 
 #endif // CREATE_LICENSE_H
