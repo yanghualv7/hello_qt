@@ -51,6 +51,9 @@
 1. 打开软件后，可以选择“读取文本”或“读取图片”按钮来加载相应的文件。
 2. 在create_license文件夹下，通过AES加密算法生成License文件，并将其保存在当前的License目录下。
 3. 软件会根据生成的License文件来限制用户的使用权限。
+4. 动态库创建方式可直接参考微软[官方教程](https://learn.microsoft.com/zh-cn/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp?view=msvc-170)。
+5. 在使用时需将动态库放入生成的**exe**同级目录下
+6. 例如在本项目中是指将 **checkDateValidity.dll**放入**Release**文件夹中。
 
 ## 贡献
 

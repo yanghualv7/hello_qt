@@ -53,6 +53,9 @@
     <ClInclude Include="include\base64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\checkDateValidity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hello.rc">

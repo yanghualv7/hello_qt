@@ -6,8 +6,9 @@
 #include <QTextCodec>
 #include <QDateTime>
 #include <string.h>
-using namespace std;
+#include "checkDateValidity.h"
 
+using namespace std;
 
 string encryptLicense(const QString& storedEncryptedLicense);
 QString getMacAddress();
@@ -15,37 +16,8 @@ QString getFilePathFromIni(const QString& iniFilePath, const QString& key);
 QString readLicenseFile(const QString& licensePath);
 QString extractHexDigits(const QString& input);
 
-bool isLicenseExpired(const QString& currentDateStr, const QString& licenseDateStr)
-{
-	int currentYear = currentDateStr.mid(0, 4).toInt();
-	int currentMonth = currentDateStr.mid(4, 2).toInt();
-	int currentDay = currentDateStr.mid(6, 2).toInt();
-
-	int licenseYear = licenseDateStr.mid(0, 4).toInt();
-	int licenseMonth = licenseDateStr.mid(4, 2).toInt();
-	int licenseDay = licenseDateStr.mid(6, 2).toInt();
-
-	if (currentYear > licenseYear)
-	{
-		//已过期
-		return false;
-	}
-	else if (currentMonth > licenseMonth)
-	{
-		//已过期
-		return false;
-	}
-	else if (currentDay > licenseDay)
-	{
-		//已过期
-		return false;
-	}
-	else
-	{
-		//未过期
-		return true;
-	}
-}
+//隐示调用静态库文件
+#pragma comment(lib, "Lib/checkDateValidity.lib")
 
 int main(int argc, char* argv[])
 {
@@ -82,13 +54,13 @@ int main(int argc, char* argv[])
 	QString PcMAcAddress_ = extractHexDigits(PcMAcAddress);
 
 	// 检查 License 是否过期
-	if (!isLicenseExpired(formattedDate, licenseDate))
+	if (!checkDateValidity(formattedDate.toStdString(), licenseDate.toStdString()))
 	{
 		QMessageBox::critical(nullptr, "License Error", QString(u8"license 已过期! 截止日期:%1\n 文件路径: %2").arg(licenseDate, LicensePath_user));
 		return -1;
 	}
 
-	// 比较许mac地址是否匹配，通过trimmed确保字符串没有前后空格
+	// 比较mac地址是否匹配，通过trimmed确保字符串没有前后空格
 	if (License_nonDatePart.trimmed().compare(PcMAcAddress_.trimmed(), Qt::CaseInsensitive) != 0)
 	{
 		// 弹出消息框

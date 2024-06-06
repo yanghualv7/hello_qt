@@ -68,6 +68,11 @@
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -111,6 +116,7 @@
   <ItemGroup>
     <ClInclude Include="include\AES.h" />
     <ClInclude Include="include\base64.h" />
+    <ClInclude Include="include\checkDateValidity.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
