@@ -25,25 +25,25 @@ bool isLicenseExpired(const QString& currentDateStr, const QString& licenseDateS
 	int licenseMonth = licenseDateStr.mid(4, 2).toInt();
 	int licenseDay = licenseDateStr.mid(6, 2).toInt();
 
-	if (currentYear < licenseYear)
-	{
-		//未过期
-		return true;
-	}
-	else if (currentMonth < licenseMonth)
-	{
-		//未过期
-		return true;
-	}
-	else if (currentDay < licenseDay)
-	{
-		//未过期
-		return true;
-	}
-	else
+	if (currentYear > licenseYear)
 	{
 		//已过期
 		return false;
+	}
+	else if (currentMonth > licenseMonth)
+	{
+		//已过期
+		return false;
+	}
+	else if (currentDay > licenseDay)
+	{
+		//已过期
+		return false;
+	}
+	else
+	{
+		//未过期
+		return true;
 	}
 }
 
