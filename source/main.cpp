@@ -10,7 +10,7 @@
 
 using namespace std;
 
-string encryptLicense(const QString& storedEncryptedLicense);
+string encryptLicense(const QString& EncryptedLicense, int flag);
 QString getMacAddress();
 QString getFilePathFromIni(const QString& iniFilePath, const QString& key);
 QString readLicenseFile(const QString& licensePath);
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	QString storedEncryptedLicense = readLicenseFile(LicensePath_user);
 
 	// 解密后的licenseString
-	string License = encryptLicense(storedEncryptedLicense);
+	string License = encryptLicense(storedEncryptedLicense, 2);
 	QString licenseString = QString::fromStdString(License);
 
 	QDate date = QDate::currentDate(); // 获取当前日期

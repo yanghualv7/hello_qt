@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include "checkDateValidity.h"
-
 bool checkDateValidity(const std::string& currentDateStr, const std::string& licenseDateStr)
 {
 	int currentYear = std::stoi(currentDateStr.substr(0, 4));
@@ -13,24 +12,21 @@ bool checkDateValidity(const std::string& currentDateStr, const std::string& lic
 	int licenseMonth = std::stoi(licenseDateStr.substr(4, 2));
 	int licenseDay = std::stoi(licenseDateStr.substr(6, 2));
 
-	if (currentYear > licenseYear)
-	{
-		//已过期
-		return false;
-	}
-	else if (currentMonth > licenseMonth)
-	{
-		//已过期
-		return false;
-	}
-	else if (currentDay > licenseDay)
-	{
-		//已过期
-		return false;
-	}
-	else
-	{
-		//未过期
+	// 比较年
+	if (currentYear < licenseYear)
 		return true;
-	}
+	else if (currentYear > licenseYear)
+		return false;
+
+	// 比较月
+	if (currentMonth < licenseMonth)
+		return true;
+	else if (currentMonth > licenseMonth)
+		return false;
+
+	// 比较日
+	if (currentDay <= licenseDay)
+		return true;
+	else
+		return false;
 }
