@@ -26,7 +26,8 @@ QString extractHexDigits(const QString& input)
 	QString result;
 	QRegularExpression hexDigitRegex("[0-9A-Fa-f]");
 	QRegularExpressionMatchIterator i = hexDigitRegex.globalMatch(input);
-	while (i.hasNext()) {
+	while (i.hasNext())
+	{
 		QRegularExpressionMatch match = i.next();
 		result += match.captured(0);
 	}
@@ -89,33 +90,17 @@ QString readLicenseFile(const QString& licensePath)
 		return QString();
 }
 
-//保存加密数据
-void saveLicenseToFile(const QString& user, const std::string& Licence)
-{
-	//无法在不联网的时候用户通过修改时间绕过认证
-	// 创建文件名，使用用户名称作为文件名的一部分
-	QString fileName = "License/" + user + "_time_" + ".lic";
-	QFile file(fileName);
-
-	if (file.open(QIODevice::WriteOnly | QIODevice::Text))
-	{
-		QTextStream out(&file);
-		// 将string 转回 QString
-		QString qLicence = QString::fromStdString(Licence);
-		out << qLicence;
-		file.close();
-	}
-	else
-	{
-		QMessageBox::warning(nullptr, u8"错误", u8"无法保存文件：" + fileName);
-	}
-}
-
 hello::hello(const QString& storedEncryptedLicense, const QString& user, QWidget* parent)
 	: QMainWindow(parent),
-	ui(new Ui::helloClass)
+	ui(new Ui::helloClass),
+	user(user)
 {
 	ui->setupUi(this);
+
+	// Initialize the timer
+	timer = new QTimer(this);
+	connect(timer, &QTimer::timeout, this, &hello::writeTimeToFile);
+	timer->start(5000); // 以毫秒为单位
 
 	// 获取本机MAC地址
 	QString macAddress = getMacAddress();
@@ -156,6 +141,67 @@ hello::hello(const QString& storedEncryptedLicense, const QString& user, QWidget
 hello::~hello()
 {
 	delete ui;
+}
+
+void hello::writeTimeToFile()
+{
+	// 获取当前时间
+	QString currentTime = QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "|";
+
+	std::string encryptTime = encryptLicense(currentTime, 1);
+
+	// 定义文件路径
+	QString fileName = "log/" + user + "_time_" + ".txt";
+	QFile file(fileName);
+
+	if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
+		QTextStream out(&file);
+		out << QString::fromStdString(encryptTime);
+		file.close();
+	}
+	else {
+		QMessageBox::warning(this, tr(u8"错误"), tr(u8"无法打开文件进行写入: %1").arg(fileName));
+		return;
+	}
+
+	// 读取完整数据
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&file);
+		QString fileContent = in.readAll();
+		file.close();
+
+		std::string decryptTime = encryptLicense(fileContent, 2);
+		if (decryptTime.empty())
+		{
+			QMessageBox::warning(this, tr(u8"警告"), tr(u8"时间戳被修改，程序即将退出"));
+			QApplication::quit(); // 关闭程序
+		}
+
+		QString decryptTime_ = QString::fromStdString(decryptTime);
+
+		// 分割读取的内容并检查是否递增
+		QStringList timeList = decryptTime_.split("| ", QString::SkipEmptyParts);
+		bool isIncreasing = true;
+
+		if (timeList.size() > 1)
+		{
+			for (int i = 1; i < timeList.size(); ++i)
+			{
+				if (timeList[i] <= timeList[i - 1])
+				{
+					isIncreasing = false;
+					break;
+				}
+			}
+
+			if (!isIncreasing)
+			{
+				QMessageBox::warning(this, tr(u8"警告"), tr(u8"时间未按顺序递增,请勿修改时间\n程序即将退出"));
+				QApplication::quit(); // 关闭程序
+			}
+		}
+	}
 }
 
 void hello::loadFile(const QString& filePath, const QString& imagePath, const QString& iniFilePath)
