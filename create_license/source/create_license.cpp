@@ -39,9 +39,7 @@ string encryptLicense(const QString times, const QString& user, const QString& m
 
 	init();
 
-init:
-	cout << "选择工作模式:加密(1)解密(2)退出(0)" << endl;
-
+	//选择工作模式:加密(1)解密(2)
 	string inp = plaintext.toStdString();
 	//密文
 	string opt = aes(key, 1, inp);
