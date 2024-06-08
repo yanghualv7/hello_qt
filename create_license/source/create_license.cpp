@@ -57,8 +57,9 @@ create_license::create_license(QWidget* parent)
 {
 	ui.setupUi(this);
 	// 连接生成许可证文件按钮的点击信号到槽函数
-	connect(ui.toolButton, &QToolButton::clicked, this, &create_license::generateLicenseFile);
 	connect(ui.addButton, &QPushButton::clicked, this, &create_license::addRow);
+	connect(ui.createLicense, &QPushButton::clicked, this, &create_license::generateLicenseFile);
+
 
 }
 
