@@ -4,11 +4,11 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-std::string readIPFromIni(const std::string& iniFile, const std::string keyName)
+std::string readFromIni(const std::string& iniFile, const std::string keyName)
 {
 	std::ifstream file(iniFile);
 	std::string line;
-	std::string ip = "127.0.0.1"; // 默认IP地址
+	std::string valueName = "0";
 
 	while (std::getline(file, line))
 	{
@@ -18,18 +18,18 @@ std::string readIPFromIni(const std::string& iniFile, const std::string keyName)
 		{
 			if (key == keyName)
 			{
-				ip = value;
+				valueName = value;
 				break;
 			}
 		}
 	}
 
-	return ip;
+	return valueName;
 }
 
 int main()
 {
-	std::string maxClientCount = readIPFromIni("config/cfg.ini", "MaxClientCount");
+	std::string maxClientCount = readFromIni("config/cfg.ini", "MaxClientCount");
 
 	// 创建TcpServer实例
 	TcpServer server(std::stoi(maxClientCount));

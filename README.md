@@ -63,8 +63,8 @@
 
 本项目中的AES算法基于[Pollockovski/Aurora-Encryption](https://github.com/Pollockovski/Aurora-Encryption)项目进行修改和扩展。
 
+本项目中的TCP代码基于[CSDN博客](https://blog.csdn.net/qq_44722098/article/details/126001350?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171807169016800186581519%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=171807169016800186581519&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-126001350-null-null.nonecase&utm_term=socket&spm=1018.2226.3001.4450)修改。
+
 ## 许可证
 
-该项目使用MIT许可证，详情请参见`LICENSE`文件。
-
----
+该项目使用MIT许可证，详情请参见`LICENSE`。
