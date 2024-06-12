@@ -109,6 +109,7 @@
   <ItemGroup>
     <ClCompile Include="source\hello.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\tcp_class.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="include\hello.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="include\AES.h" />
     <ClInclude Include="include\base64.h" />
     <ClInclude Include="include\checkDateValidity.h" />
+    <ClInclude Include="include\tcp_class.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
