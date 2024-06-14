@@ -1,6 +1,8 @@
 #pragma once
 
 #include <winsock2.h>
+#include <iostream>
+#include <string>
 #pragma comment(lib,"ws2_32.lib")
 
 class TcpClient
@@ -37,6 +39,14 @@ public:
 	long RecvData(char* buf, int length);
 
 	/*
+		函数名称：receiveFile
+		参数：filePath是存储接收文件的目录
+		返回：返回接收数据是否成功的信息
+		功能：接受数据
+	*/
+	std::string receiveFile(const std::string& filePath);
+
+	/*
 	函数名称：Close
 	参数：无
 	返回：无
@@ -47,3 +57,4 @@ public:
 private:
 	SOCKET TcpSocket;//tcp套接字    //连接的端口
 };
+
