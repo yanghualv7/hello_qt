@@ -43,7 +43,7 @@
    cd hello_qt
    ```
 
-2. 打开Qt Creator并加载`hello.pro`文件，配置项目。
+2. 使用 **VS** 打开`sln`文件，配置项目。
 
 3. 编译并运行项目。
 
