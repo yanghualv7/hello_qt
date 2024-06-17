@@ -8,6 +8,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <QProgressDialog.h>
+#include <QApplication>
 
 
 TcpClient::TcpClient()
@@ -83,8 +85,64 @@ void TcpClient::Close()
 }
 
 
+//std::string TcpClient::receiveFile(const std::string& directory)
+//{
+//	// 接收文件名长度
+//	int fileNameSize;
+//	recv(TcpSocket, reinterpret_cast<char*>(&fileNameSize), sizeof(fileNameSize), 0);
+//
+//	// 接收文件名
+//	std::vector<char> fileNameBuffer(fileNameSize);
+//	recv(TcpSocket, fileNameBuffer.data(), fileNameSize, 0);
+//	std::string fileName(fileNameBuffer.begin(), fileNameBuffer.end());
+//
+//	// 创建文件
+//	std::string filePath = directory + "/" + fileName;
+//	std::ofstream file(filePath, std::ios::binary);
+//	if (!file.is_open())
+//		return u8"无法创建文件";
+//
+//	// 接收文件大小
+//	int fileSize;
+//	recv(TcpSocket, reinterpret_cast<char*>(&fileSize), sizeof(fileSize), 0);
+//
+//	// 接收文件内容
+//	char buffer[1024];
+//	int bytesReceived;
+//	int totalBytesReceived = 0;
+//
+//	//progress.setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);		//不显示进度条上的“最小化”“最大化”“关闭”
+//	//progress.setWindowTitle("任务保存");	//窗口标题
+//	//progress.setAutoClose(false);		//进度达到最大值时不关闭，默认为true
+//	//progress.setLabelText("任务保存中...");	//显示的文本
+//	//progress.setRange(0, 100);				//设置进度条的极值，默认为[0,100]
+//	//progress.setCancelButton(NULL);			//不显示取消按钮
+//	//progress.show();
+//	while (totalBytesReceived < fileSize)
+//	{
+//		bytesReceived = recv(TcpSocket, buffer, sizeof(buffer), 0);
+//		if (bytesReceived == SOCKET_ERROR || bytesReceived == 0)
+//		{
+//			file.close();
+//			return u8"文件接收失败";
+//		}
+//
+//		file.write(buffer, bytesReceived);
+//		totalBytesReceived += bytesReceived;
+//	}
+//
+//	file.close();
+//
+//	// 发送结束信号给服务器
+//	std::string endMessage = "RECEIVE_COMPLETE";
+//	send(TcpSocket, endMessage.c_str(), endMessage.length(), 0);
+//
+//	return u8"文件 " + fileName + u8" 接收完成";
+//}
+
 std::string TcpClient::receiveFile(const std::string& directory)
 {
+
 	// 接收文件名长度
 	int fileNameSize;
 	recv(TcpSocket, reinterpret_cast<char*>(&fileNameSize), sizeof(fileNameSize), 0);
@@ -104,10 +162,21 @@ std::string TcpClient::receiveFile(const std::string& directory)
 	int fileSize;
 	recv(TcpSocket, reinterpret_cast<char*>(&fileSize), sizeof(fileSize), 0);
 
+	// 初始化进度条
+	QProgressDialog* progress = new QProgressDialog;
+	progress->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint); // 不显示进度条上的“最小化”“最大化”“关闭”
+	progress->setWindowTitle(u8"任务保存"); // 窗口标题
+	progress->setAutoClose(false); // 进度达到最大值时不关闭，默认为true
+	progress->setLabelText(u8"任务保存中..."); // 显示的文本
+	progress->setRange(0, 100); // 设置进度条的极值，默认为[0,100]
+	progress->setCancelButton(nullptr); // 不显示取消按钮
+	progress->show();
+
 	// 接收文件内容
 	char buffer[1024];
 	int bytesReceived;
 	int totalBytesReceived = 0;
+
 	while (totalBytesReceived < fileSize)
 	{
 		bytesReceived = recv(TcpSocket, buffer, sizeof(buffer), 0);
@@ -119,6 +188,20 @@ std::string TcpClient::receiveFile(const std::string& directory)
 
 		file.write(buffer, bytesReceived);
 		totalBytesReceived += bytesReceived;
+
+		// 更新进度条
+		int progressValue = static_cast<int>((static_cast<double>(totalBytesReceived) / fileSize) * 100);
+		progress->setValue(progressValue);
+
+		// 处理事件队列以确保进度条更新
+		QCoreApplication::processEvents();
+
+		if (progress->wasCanceled())
+		{
+			file.close();
+			delete progress; // 销毁进度条对象
+			return u8"文件接收取消";
+		}
 	}
 
 	file.close();
@@ -126,6 +209,8 @@ std::string TcpClient::receiveFile(const std::string& directory)
 	// 发送结束信号给服务器
 	std::string endMessage = "RECEIVE_COMPLETE";
 	send(TcpSocket, endMessage.c_str(), endMessage.length(), 0);
+
+	delete progress; // 销毁进度条对象
 
 	return u8"文件 " + fileName + u8" 接收完成";
 }
