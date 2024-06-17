@@ -1,12 +1,8 @@
-#include "hello.h"
-#include <QtWidgets/QApplication>
+#include "mainwindow.h"
 #include <QMessageBox>
-#include <QCoreApplication>
-#include <QSettings>
-#include <QTextCodec>
 #include <QDateTime>
 #include <string.h>
-#include <iostream>
+#include <QtWidgets/QApplication>
 #include "checkDateValidity.h"
 #include "tcp_class.h"
 
@@ -19,7 +15,8 @@ QString readLicenseFile(const QString& licensePath);
 QString extractHexDigits(const QString& input);
 
 //隐示调用静态库文件
-#pragma comment(lib, "Lib/checkDateValidity.lib")
+#pragma comment(lib, "../Lib/checkDateValidity.lib")
+
 
 int main(int argc, char* argv[])
 {
@@ -171,9 +168,7 @@ int main(int argc, char* argv[])
 		QMessageBox::critical(nullptr, "License Error", QString(u8"license 已过期! 截止日期:%1\n 文件路径: %2").arg(licenseDate, LicensePath_user));
 		return -1;
 	}
-
-	hello w(storedEncryptedLicense, user);
+	mainwindow w(user);
 	w.show();
 	return a.exec();
 }
-
