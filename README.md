@@ -2,13 +2,17 @@
 
 ## 简介
 
-该项目是一个专业实习项目，主要功能包括使用Qt读取文本和图片，同时使用AES算法生成License认证，对软件的使用权限进行限制。
+该项目是一个专业实习项目，主要功能包括使用Qt读取文本和图片，同时使用AES算法生成License认证，对软件的使用权限进行限制，TCP通信，贪吃蛇小游戏。
 
 ## 功能
 
 1. **文本读取**：通过Qt界面读取和显示文本文件内容。
 2. **图片读取**：通过Qt界面读取和显示图片文件内容。
 3. **AES加密**：使用AES算法生成License认证，控制软件的使用权限。
+4. **制作认证文件**：使用AES算法，通过用户手动输入Mac地址进行加密。
+5. **TCP通信**：使用TCP/IP协议和服务器进行通信，通过服务器限制登录设备数量。
+6. **下载服务器数据**
+7. **贪吃蛇小游戏**
 
 ## 项目结构
 
@@ -16,17 +20,14 @@
 - `create_license/`：生成AES秘钥及License文件的代码
 - `ico/`：图标文件目录
 - `image/`：图片文件目录
-- `include/`：头文件目录
-- `source/`：源代码目录
 - `user_files/`：用户文件目录
-- `.gitignore`：Git忽略文件配置
-- `hello.qrc`：Qt资源文件
-- `hello.rc`：资源文件
-- `hello.sln`：解决方案文件
-- `hello.ui`：Qt UI文件
-- `hello.vcxproj`：Visual Studio项目文件
-- `hello.vcxproj.filters`：Visual Studio项目过滤文件
-- `resource.h`：资源头文件
+- `hello`: 读取图片和文字进行展示
+- `tcp_client`: 客户端示例demo，本项目客户端功能已集成到各自的模块中
+- `tcp_server` : 服务器
+- `snake`: 贪吃蛇小游戏
+- `checkDateValidity`: 时间验证接口
+- `Bin`: 动态库
+- `Lib`: 静态库
 
 ## 环境依赖
 
