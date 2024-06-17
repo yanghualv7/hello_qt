@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
 std::string readFromIni(const std::string& iniFile, const std::string keyName)
 {
 	std::ifstream file(iniFile);
@@ -30,9 +31,10 @@ std::string readFromIni(const std::string& iniFile, const std::string keyName)
 int main()
 {
 	std::string maxClientCount = readFromIni("config/cfg.ini", "MaxClientCount");
+	std::string sendFilePath = readFromIni("config/cfg.ini", "SendFilePath");
 
 	// 创建TcpServer实例
-	TcpServer server(std::stoi(maxClientCount));
+	TcpServer server(std::stoi(maxClientCount), sendFilePath);
 
 	std::cout << "等待客户端连接......\n" << std::endl;
 

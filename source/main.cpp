@@ -33,8 +33,10 @@ int main(int argc, char* argv[])
 	QString user = getFilePathFromIni(iniFilePath, "UserName");
 	QString LicensePath = getFilePathFromIni(iniFilePath, "LicensePath");
 	QString serverIPQstr = getFilePathFromIni(iniFilePath, "ip");
+	QString saveDatePath = getFilePathFromIni(iniFilePath, "SaveDatePath");
 
 	std::string serverIP = serverIPQstr.toStdString();
+	std::string directory = saveDatePath.toStdString();
 
 	// 创建TcpClient实例
 	TcpClient client;
@@ -52,15 +54,23 @@ int main(int argc, char* argv[])
 
 			while (true)
 			{
-				// 从用户输入读取数据
-				std::string message = "1";
+				std::string message = "SEND_FILE";
 				// 发送数据
 
-				if (client.SendData(message.c_str(), message.length()) == 0)
+				if (client.SendData(message.c_str(), message.length()) != 0)
 				{
-					QMessageBox::information(nullptr, "Message", QString(u8"数据发送成功"));
+					QMessageBox::critical(nullptr, "Error", QString(u8"数据发送失败\n程序即将退出"));
+					// 退出程序
+					return -1;
 				}
-				else
+
+				std::string receiveMessage = client.receiveFile(directory);
+				QMessageBox::information(nullptr, "Message", QString::fromStdString(receiveMessage));
+
+				message = "1";
+				// 发送数据
+
+				if (client.SendData(message.c_str(), message.length()) != 0)
 				{
 					QMessageBox::critical(nullptr, "Error", QString(u8"数据发送失败\n程序即将退出"));
 					// 退出程序
