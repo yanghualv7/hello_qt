@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	QString macAddress = getMacAddress();
 
 	// ¶ÁÈ¡iniÎÄ¼þ
-	QString iniFilePath = "config/cfg.ini";
+	QString iniFilePath = "../config/cfg.ini";
 	QString user = getFilePathFromIni(iniFilePath, "UserName");
 	QString LicensePath = getFilePathFromIni(iniFilePath, "LicensePath");
 	QString serverIPQstr = getFilePathFromIni(iniFilePath, "ip");

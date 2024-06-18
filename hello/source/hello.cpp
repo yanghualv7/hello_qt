@@ -110,7 +110,7 @@ hello::hello(const QString& storedEncryptedLicense, const QString& user, QWidget
 	ui->macLabel_2->setText("License: " + QString::fromStdString(encryptedLicense_));
 
 	// 读取ini文件
-	QString iniFilePath = "config/cfg.ini";
+	QString iniFilePath = "../config/cfg.ini";
 	QString filePath = getFilePathFromIni(iniFilePath, "FilePath");
 	QString imagePath = getFilePathFromIni(iniFilePath, "ImagePath");
 	QString icoPath = getFilePathFromIni(iniFilePath, "QiconPath");

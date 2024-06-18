@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <winsock2.h>
 #include <vector>
@@ -8,13 +8,13 @@
 class TcpServer
 {
 public:
-	//·şÎñ¶Ë¹¹Ôìº¯Êı
+	//æœåŠ¡ç«¯æ„é€ å‡½æ•°
 	TcpServer(int maxClientCount, std::string sendFilePath);
-	//·şÎñ¶ËÎö¹¹º¯Êı
+	//æœåŠ¡ç«¯ææ„å‡½æ•°
 	~TcpServer();
-	//´¦Àí¿Í»§¶ËÁ´½Ó
+	//å¤„ç†å®¢æˆ·ç«¯é“¾æ¥
 	void handleConnections();
-	//´¦ÀíÇëÇó
+	//å¤„ç†è¯·æ±‚
 	static void handleRequests(LPVOID);
 	int getClientCount() const;
 	std::vector<SOCKET> getClientSockets() const;
@@ -28,7 +28,7 @@ private:
 	int MaxClientCount = 2;
 	std::string SendFilePath;
 
-	void handleClientRequests(SOCKET currentConnection); // ĞÂÔö·Ç¾²Ì¬·½·¨
+	void handleClientRequests(SOCKET currentConnection); // æ–°å¢éé™æ€æ–¹æ³•
 
 };
 

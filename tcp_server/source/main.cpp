@@ -1,4 +1,4 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+ï»¿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include "tcp_class.h"
 #include <fstream>
@@ -30,15 +30,15 @@ std::string readFromIni(const std::string& iniFile, const std::string keyName)
 
 int main()
 {
-	std::string maxClientCount = readFromIni("config/cfg.ini", "MaxClientCount");
-	std::string sendFilePath = readFromIni("config/cfg.ini", "SendFilePath");
+	std::string maxClientCount = readFromIni("../config/cfg.ini", "MaxClientCount");
+	std::string sendFilePath = readFromIni("../config/cfg.ini", "SendFilePath");
 
-	// ´´½¨TcpServerÊµÀý
+	// åˆ›å»ºTcpServerå®žä¾‹
 	TcpServer server(std::stoi(maxClientCount), sendFilePath);
 
-	std::cout << "µÈ´ý¿Í»§¶ËÁ¬½Ó......\n" << std::endl;
+	std::cout << "ç­‰å¾…å®¢æˆ·ç«¯è¿žæŽ¥......\n" << std::endl;
 
-	// Æô¶¯´¦Àí¿Í»§¶ËÁ¬½ÓµÄº¯Êý
+	// å¯åŠ¨å¤„ç†å®¢æˆ·ç«¯è¿žæŽ¥çš„å‡½æ•°
 	server.handleConnections();
 
 	return 0;
