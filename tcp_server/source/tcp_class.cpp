@@ -1,4 +1,4 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+ï»¿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include "tcp_class.h"
 #include <iostream>
@@ -8,14 +8,14 @@
 #include <sstream>
 #include <atomic>
 #include <fstream>
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 TcpServer::TcpServer(int maxClientCount, std::string sendFilePath) :clientCount(0),
 MaxClientCount(maxClientCount), SendFilePath(sendFilePath)
 {
 	WSADATA wsadata;
 	if (0 != WSAStartup(MAKEWORD(2, 2), &wsadata))
 	{
-		std::cout << "\nÌ×½Ó×Ö´ò¿ªÊ§°Ü" << std::endl;
+		std::cout << "\nå¥—æ¥å­—æ‰“å¼€å¤±è´¥" << std::endl;
 		return;
 	}
 
@@ -30,14 +30,14 @@ MaxClientCount(maxClientCount), SendFilePath(sendFilePath)
 	listen(TcpSocket, 5);
 }
 
-// Îö¹¹º¯Êı
+// ææ„å‡½æ•°
 TcpServer::~TcpServer()
 {
 	closesocket(TcpSocket);
 	WSACleanup();
 }
 
-// ´¦Àí¿Í»§¶ËÁ´½Ó
+// å¤„ç†å®¢æˆ·ç«¯é“¾æ¥
 void TcpServer::handleConnections()
 {
 	sockaddr_in remoteAddr;
@@ -54,7 +54,7 @@ void TcpServer::handleConnections()
 				clientCount++;
 				clientSockets.push_back(currentConnection);
 			}
-			_beginthread(TcpServer::handleRequests, 0, this); // ´«µİµ±Ç°¶ÔÏóÖ¸Õë
+			_beginthread(TcpServer::handleRequests, 0, this); // ä¼ é€’å½“å‰å¯¹è±¡æŒ‡é’ˆ
 		}
 	}
 }
@@ -62,36 +62,36 @@ void TcpServer::handleConnections()
 void TcpServer::handleRequests(LPVOID param)
 {
 	TcpServer* server = static_cast<TcpServer*>(param);
-	SOCKET currentConnection = server->clientSockets.back(); // »ñÈ¡µ±Ç°Á¬½ÓµÄsocket
+	SOCKET currentConnection = server->clientSockets.back(); // è·å–å½“å‰è¿æ¥çš„socket
 	server->handleClientRequests(currentConnection);
 }
 
 void TcpServer::sendFile(SOCKET clientSocket, const std::string& filePath)
 {
-	// ·¢ËÍÎÄ¼şÃû
+	// å‘é€æ–‡ä»¶å
 	std::string fileName = filePath.substr(filePath.find_last_of("/\\") + 1);
 	int fileNameSize = fileName.size();
-	// ·¢ËÍÎÄ¼şÃû³¤¶È
+	// å‘é€æ–‡ä»¶åé•¿åº¦
 	send(clientSocket, reinterpret_cast<const char*>(&fileNameSize), sizeof(fileNameSize), 0);
-	// ·¢ËÍÎÄ¼şÃû
+	// å‘é€æ–‡ä»¶å
 	send(clientSocket, fileName.c_str(), fileNameSize, 0);
 
-	// ´ò¿ªÎÄ¼ş
+	// æ‰“å¼€æ–‡ä»¶
 	std::ifstream file(filePath, std::ios::binary);
 	if (!file.is_open())
 	{
-		std::cerr << "ÎŞ·¨´ò¿ªÎÄ¼ş: " << filePath << std::endl;
+		std::cerr << "æ— æ³•æ‰“å¼€æ–‡ä»¶: " << filePath << std::endl;
 		return;
 	}
 
-	// »ñÈ¡ÎÄ¼ş´óĞ¡
+	// è·å–æ–‡ä»¶å¤§å°
 	file.seekg(0, std::ios::end);
 	int fileSize = file.tellg();
 	file.seekg(0, std::ios::beg);
-	// ·¢ËÍÎÄ¼ş´óĞ¡
+	// å‘é€æ–‡ä»¶å¤§å°
 	send(clientSocket, reinterpret_cast<const char*>(&fileSize), sizeof(fileSize), 0);
 
-	// ·¢ËÍÎÄ¼şÄÚÈİ
+	// å‘é€æ–‡ä»¶å†…å®¹
 	char buffer[1024];
 	while (file.read(buffer, sizeof(buffer)) || file.gcount() > 0)
 	{
@@ -99,14 +99,14 @@ void TcpServer::sendFile(SOCKET clientSocket, const std::string& filePath)
 		int bytesSent = send(clientSocket, buffer, bytesToSend, 0);
 		if (bytesSent == SOCKET_ERROR)
 		{
-			std::cerr << "ÎÄ¼ş·¢ËÍÊ§°Ü" << std::endl;
+			std::cerr << "æ–‡ä»¶å‘é€å¤±è´¥" << std::endl;
 			break;
 		}
 	}
 
 	file.close();
 
-	// ½ÓÊÕ¿Í»§¶ËµÄ½áÊøĞÅºÅ
+	// æ¥æ”¶å®¢æˆ·ç«¯çš„ç»“æŸä¿¡å·
 	char endBuffer[128];
 	int bytesReceived = recv(clientSocket, endBuffer, sizeof(endBuffer), 0);
 	if (bytesReceived > 0)
@@ -114,7 +114,7 @@ void TcpServer::sendFile(SOCKET clientSocket, const std::string& filePath)
 		std::string endMessage(endBuffer, bytesReceived);
 		if (endMessage == "RECEIVE_COMPLETE")
 		{
-			std::cout << "¿Í»§¶ËÎÄ¼ş½ÓÊÕÍê³É: " << filePath << std::endl;
+			std::cout << "å®¢æˆ·ç«¯æ–‡ä»¶æ¥æ”¶å®Œæˆ: " << filePath << std::endl;
 		}
 	}
 }
@@ -141,7 +141,7 @@ void TcpServer::handleClientRequests(SOCKET currentConnection)
 			buf[bytesReceived] = '\0';
 
 			std::string receivedMessage(buf);
-			std::cout << "\nÊÕµ½¿Í»§¶ËÏûÏ¢: " << receivedMessage << std::endl;
+			std::cout << "\næ”¶åˆ°å®¢æˆ·ç«¯æ¶ˆæ¯: " << receivedMessage << std::endl;
 
 			if (receivedMessage == "SEND_FILE")
 			{
@@ -149,10 +149,10 @@ void TcpServer::handleClientRequests(SOCKET currentConnection)
 			}
 			else
 			{
-				// ÆäËû´¦ÀíÂß¼­
+				// å…¶ä»–å¤„ç†é€»è¾‘
 				getClientCount();
 
-				std::cout << "\nµ±Ç°Éè±¸Êı£º" << clientCount << std::endl;
+				std::cout << "\nå½“å‰è®¾å¤‡æ•°ï¼š" << clientCount << std::endl;
 				int laveClientCount = MaxClientCount - clientCount;
 
 				if (MaxClientCount >= clientCount)
@@ -160,17 +160,17 @@ void TcpServer::handleClientRequests(SOCKET currentConnection)
 					std::string message = std::to_string(laveClientCount);
 					if (send(currentConnection, message.c_str(), message.length(), 0) == SOCKET_ERROR)
 					{
-						std::cout << "\n·¢ËÍ»ØÖ´Ê§°Ü" << std::endl;
+						std::cout << "\nå‘é€å›æ‰§å¤±è´¥" << std::endl;
 					}
 
 				}
 				else
 				{
-					std::cout << "\nµÇÂ¼Éè±¸ÒÑ´ïÉÏÏŞ\n";
+					std::cout << "\nç™»å½•è®¾å¤‡å·²è¾¾ä¸Šé™\n";
 					std::string message = "-1";
 					if (send(currentConnection, message.c_str(), message.length(), 0) == SOCKET_ERROR)
 					{
-						std::cout << "\n·¢ËÍ»ØÖ´Ê§°Ü" << std::endl;
+						std::cout << "\nå‘é€å›æ‰§å¤±è´¥" << std::endl;
 					}
 
 				}
