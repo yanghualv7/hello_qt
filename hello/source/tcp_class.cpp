@@ -10,6 +10,7 @@
 #include <vector>
 #include <QProgressDialog.h>
 #include <QApplication>
+#include <filesystem>
 
 
 TcpClient::TcpClient()
@@ -99,6 +100,14 @@ std::string TcpClient::receiveFile(const std::string& directory)
 
 	// 创建文件
 	std::string filePath = directory + "/" + fileName;
+
+	if (std::filesystem::exists(filePath))
+	{
+		// 发送文件已存在信号给服务器
+		std::string existMessage = "FILE_EXISTS";
+		send(TcpSocket, existMessage.c_str(), existMessage.length(), 0);
+		return u8"文件已存在";
+	}
 	std::ofstream file(filePath, std::ios::binary);
 	if (!file.is_open())
 		return u8"无法创建文件";

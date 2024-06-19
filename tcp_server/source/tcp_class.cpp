@@ -76,6 +76,19 @@ void TcpServer::sendFile(SOCKET clientSocket, const std::string& filePath)
 	// 发送文件名
 	send(clientSocket, fileName.c_str(), fileNameSize, 0);
 
+	// 检查发送文件客户端是否已存在
+	char firstBuffer[128];
+	int firstReceived = recv(clientSocket, firstBuffer, sizeof(firstBuffer), 0);
+	if (firstReceived > 0)
+	{
+		std::string firstMessage(firstBuffer, firstReceived);
+		if (firstMessage == "FILE_EXISTS")
+		{
+			std::cout << "客户端已存在待发文件: " << filePath << std::endl;
+			return;
+		}
+	}
+
 	// 打开文件
 	std::ifstream file(filePath, std::ios::binary);
 	if (!file.is_open())
