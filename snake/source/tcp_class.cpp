@@ -108,6 +108,12 @@ std::string TcpClient::receiveFile(const std::string& directory)
 		send(TcpSocket, existMessage.c_str(), existMessage.length(), 0);
 		return u8"文件已存在";
 	}
+	else
+	{
+		// 再次发送下载请求
+		std::string existMessage = "SEND_FILE";
+		send(TcpSocket, existMessage.c_str(), existMessage.length(), 0);
+	}
 
 	std::ofstream file(filePath, std::ios::binary);
 	if (!file.is_open())
